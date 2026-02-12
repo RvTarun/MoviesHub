@@ -38,7 +38,7 @@ struct ProfileContent: View {
                     VStack(alignment: .leading){
                         Text("\(userName[0])")
                             .font(.system(size: 22, weight: .bold, design: .default))
-                        Text("\(userName[0])@gmail.com")
+                        Text("\(userName[0])@stream.com")
                             .font(.system(size: 14, weight: .regular))
                             .opacity(0.8)
                     }
