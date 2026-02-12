@@ -8,43 +8,64 @@
 import SwiftUI
 struct bottom: View {
     var body: some View {
-        VStack{
-            Divider()
-            HStack{
-                Spacer()
-                VStack(alignment: .center){
-                    Image(systemName: "house")
-                        .resizable()
-                        .frame(width: 30, height: 25)
-                    Text("Home")
-                        .font(.caption)
+        NavigationStack {
+            VStack{
+                HStack{
+                    Spacer()
+                    NavigationLink{
+                        ContentView()
+                    }label: {
+                        VStack(alignment: .center){
+                            Image(systemName: "house")
+                                .resizable()
+                                .frame(width: 30, height: 25)
+                            Text("Home")
+                                .font(.caption)
+                        }
+                    }
+                    
+                    Spacer()
+                    NavigationLink{
+                        watchList()
+                    }label: {
+                        VStack(alignment: .center){
+                            Image(systemName: "play.rectangle.on.rectangle")
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                            Text("Watchlist")
+                                .font(.caption)
+                        }
+                    }
+                   
+                    Spacer()
+                    NavigationLink{
+                        ProfileView()
+                    }label: {
+                        VStack(alignment: .center){
+                            Image(systemName: "person")
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                            Text("Profile")
+                                .font(.caption)
+                        }
+                    }
+                    
+                    Spacer()
                 }
-                Spacer()
-                VStack(alignment: .center){
-                    Image(systemName: "play.rectangle.on.rectangle")
-                        .resizable()
-                        .frame(width: 30, height: 25)
-                    Text("Watchlist")
-                        .font(.caption)
-                }
-                Spacer()
-                VStack(alignment: .center){
-                    Image(systemName: "person")
-                        .resizable()
-                        .frame(width: 30, height: 25)
-                    Text("Profile")
-                        .font(.caption)
-                }
-                Spacer()
+                .foregroundStyle(Color(.white))
+                .overlay(
+                    Rectangle()
+                        .frame(height: 1)
+                        .foregroundColor(.gray)
+                        .offset(y: -32)
+                )
             }
-            .foregroundStyle(Color(.secondaryLabel))
-            
+            .frame(height: 50)
         }
-        .frame(height: 50)
     }
     
 }
 
 #Preview {
-    bottom()
+    ContentView()
 }
