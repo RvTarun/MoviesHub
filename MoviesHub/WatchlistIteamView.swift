@@ -71,7 +71,7 @@ struct topView: View {
     var body: some View {
         HStack{
             NavigationLink{
-                watchList()
+                WatchList()
             }label: {
                 Image(systemName: "chevron.left")
                     .resizable()

@@ -26,7 +26,7 @@ struct bottom: View {
                     
                     Spacer()
                     NavigationLink{
-                        watchList()
+                        WatchList()
                     }label: {
                         VStack(alignment: .center){
                             Image(systemName: "play.rectangle.on.rectangle")

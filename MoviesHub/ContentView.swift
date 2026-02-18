@@ -48,9 +48,9 @@ struct promotionalView: View {
         ScrollView(.horizontal, showsIndicators: false){
             HStack(alignment: .top){
                 LazyHGrid(rows: count){
-                    ForEach(imgName, id: \.self){i in
+                    ForEach(MovieD.sorted(by: <), id: \.key){key, value in
                         ZStack(alignment: .leading){
-                            Image("\(i)")
+                            Image("\(key)")
                                 .resizable()
                                 .cornerRadius(10)
                                 .frame(minHeight: 100)
@@ -59,7 +59,7 @@ struct promotionalView: View {
                                 .aspectRatio(1.6/1.1, contentMode: .fit)
                             VStack(alignment: .leading){
                                 NavigationLink{
-                                    movieIteam()
+                                    movieIteam(currentMovie: "\(key)", currentCategory: "\(value)")
                                 }label:{
                                     HStack(alignment: .center){
                                         Image(systemName: "play.square.fill")
@@ -103,21 +103,26 @@ struct movieFeed: View {
                     .foregroundStyle(Color.white)
                 ScrollView(.horizontal, showsIndicators: false){
                             LazyHGrid(rows: count){
-                                ForEach(imgName, id: \.self){i in
-                                    Image(imgName[Int.random(in: 0..<14)])
-                                        .resizable()
-                                        .cornerRadius(10)
-                                        .frame(minHeight: 100)
-                                        .frame(maxHeight: 400)
-                                        .clipped()
-                                        .overlay(
-                                            Image(systemName: "play.fill")
-                                                .resizable()
-                                                .foregroundColor(.gray)
-                                                .opacity(0.5)
-                                                .frame(width: 50, height: 50)
-                                        )
-                                        .aspectRatio(0.6/0.9, contentMode: .fit)
+                                ForEach(MovieD.sorted(by: >), id: \.key){key, value in
+                                    NavigationLink{
+                                        movieIteam(currentMovie: "\(key)", currentCategory: "\(value)")
+                                    }label: {
+                                        Image("\(key)")
+                                            .resizable()
+                                            .cornerRadius(10)
+                                            .frame(minHeight: 100)
+                                            .frame(maxHeight: 400)
+                                            .clipped()
+                                            .overlay(
+                                                Image(systemName: "play.fill")
+                                                    .resizable()
+                                                    .foregroundColor(.gray)
+                                                    .opacity(0.5)
+                                                    .frame(width: 50, height: 50)
+                                            )
+                                            .aspectRatio(0.6/0.9, contentMode: .fit)
+                                    }
+                                    
                                 }
                             }
                 }

@@ -6,16 +6,73 @@
 //
 
 import SwiftUI
-struct watchList: View {
-@State var isSaved: Bool = false
+
+struct CardModel: Identifiable {
+    var id = UUID()
+    var imgName: String
+    var category: String
+    var isMarked: Bool
+}
+
+
+struct WatchList: View {
+//@State var isSaved: Bool = false
+    @State private var card: [CardModel] = []
+    
+    
+    init(){
+        _card = State(initialValue: newCard())
+       
+    }
     
     var body: some View {
         NavigationStack{
             VStack{
-                MovieContent(
-                    isSaved: $isSaved
-                    
-                )
+                VStack{
+                    Rectangle()
+                        .foregroundStyle(Color.black)
+                        .frame(height: 60)
+                    TopView()
+                   ScrollView{
+                       ForEach(card.indices, id: \.self) { index in
+                           ZStack{
+                               Rectangle()
+                                   .foregroundStyle(Color.white.opacity(0.1))
+                                   .cornerRadius(10)
+                               HStack(alignment: .top){
+                                   NavigationLink{
+                                       movieIteam(currentMovie: "\(card[index].imgName)", currentCategory: "\(card[index].category)")
+                                   }label:{
+                                       Image("\(card[index].imgName)")
+                                           .resizable()
+                                           .frame(width:100, height: 150)
+                                           .cornerRadius(10)
+                                           .clipped()
+                                   }
+                                   
+                                   VStack(alignment: .leading){
+                                       Text("\(card[index].imgName)")
+                                           .font(.system(size: 22, weight: .bold))
+                                           .foregroundColor(.white)
+                                       Text("\(card[index].category)")
+                                           .font(.system(size: 18))
+                                           .foregroundStyle(Color.gray)
+                                   }
+                                   .padding(10)
+                                   Spacer()
+                                   Button{
+                                       card[index].isMarked.toggle()
+                                   }label: {
+                                       Image(systemName:  card[index].isMarked ? "bookmark.fill": "bookmark")
+                                           .foregroundStyle(Color.gray)
+                                           .padding(10)
+                                   }
+                               }
+                               .cornerRadius(10)
+                           }
+                        }
+                    }
+                }
                 bottom()
             }
             .ignoresSafeArea()
@@ -24,10 +81,23 @@ struct watchList: View {
         .toolbar(.hidden)
 
     }
+    
+    func newCard() -> [CardModel]{
+        var cards: [CardModel] = []
+        
+        // Sort the dictionary by key and iterate to build cards
+        for (key, value) in MovieD.sorted(by: { $0.key < $1.key }) {
+            cards.append(CardModel(imgName: String(describing: key),
+                                   category: String(describing: value),
+                                   isMarked: false))
+        }
+        return cards
+    }
+
 }
 
 #Preview {
-    watchList()
+    WatchList()
 }
 
 struct TopView: View {
@@ -56,53 +126,4 @@ struct TopView: View {
     }
 }
 
-struct MovieContent: View {
-    @Binding var isSaved: Bool
-    var body: some View {
-        VStack{
-            Rectangle()
-                .foregroundStyle(Color.black)
-                .frame(height: 60)
-            TopView()
-           ScrollView{
-               ForEach(MovieD.sorted(by: <), id: \.key) { key, value in
-                   ZStack{
-                       Rectangle()
-                           .foregroundStyle(Color.white.opacity(0.1))
-                           .cornerRadius(10)
-                       HStack(alignment: .top){
-                           NavigationLink{
-                               movieIteam(currentMovie: "\(key)", currentCategory: "\(value)")
-                           }label:{
-                               Image("\(key)")
-                                   .resizable()
-                                   .frame(width:100, height: 150)
-                                   .cornerRadius(10)
-                                   .clipped()
-                           }
-                           
-                           VStack(alignment: .leading){
-                               Text("\(key)")
-                                   .font(.system(size: 22, weight: .bold))
-                                   .foregroundColor(.white)
-                               Text("\(value)")
-                                   .font(.system(size: 18))
-                                   .foregroundStyle(Color.gray)
-                           }
-                           .padding(10)
-                           Spacer()
-                           Button{
-                               isSaved.toggle()
-                           }label: {
-                               Image(systemName: isSaved ? "bookmark.fill": "bookmark")
-                                   .foregroundStyle(Color.gray)
-                                   .padding(10)
-                           }
-                       }
-                       .cornerRadius(10)
-                   }
-                }
-            }
-        }
-    }
-}
+
