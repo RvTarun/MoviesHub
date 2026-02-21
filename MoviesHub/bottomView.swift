@@ -13,7 +13,7 @@ struct bottom: View {
                 HStack{
                     Spacer()
                     NavigationLink{
-                        ContentView()
+                        homePagemovieView()
                     }label: {
                         VStack(alignment: .center){
                             Image(systemName: "house")

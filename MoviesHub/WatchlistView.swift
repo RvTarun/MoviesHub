@@ -104,7 +104,7 @@ struct TopView: View {
     var body: some View {
         HStack{
             NavigationLink{
-                ContentView()
+                homePagemovieView()
             }label: {
                 Image(systemName: "chevron.left")
                     .resizable()
@@ -125,5 +125,3 @@ struct TopView: View {
         .foregroundStyle(Color.white.opacity(0.9))
     }
 }
-
-

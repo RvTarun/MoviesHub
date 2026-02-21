@@ -6,7 +6,7 @@
 //
 import SwiftUI
 struct ProfileView: View {
-    
+    @ObservedObject var auth = AuthViewModel()
     var body: some View {
         NavigationStack{
             VStack{
@@ -24,6 +24,7 @@ struct ProfileView: View {
 }
 
 struct ProfileContent: View {
+    @ObservedObject var auth = AuthViewModel()
     var count = [
         GridItem(.flexible(minimum: 50, maximum: 250))
     ]
@@ -164,26 +165,46 @@ struct ProfileContent: View {
                 }
                 .padding(EdgeInsets(top: -10, leading: 10, bottom: 0, trailing:10))
                 
-                ZStack{
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(height: 50)
-                        .foregroundStyle(Color(.red))
-                        .opacity(0.4)
-                    HStack{
-                        Image(systemName: "rectangle.portrait.and.arrow.right")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundStyle(Color(.white))
-                            .padding(5)
-                        Text("Log Out")
-                            .font(.system(size: 18))
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                    }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
-                    .foregroundStyle(Color.white)
+                Button(action: {
+                    auth.logout()
+                }){
+                    NavigationLink{
+                        ContentView()
+                    } label: {
+                        Text("log Out \(Image(systemName: "rectangle.portrait.and.arrow.right"))")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .background(Color.red.opacity(0.4))
+                            .clipShape(RoundedRectangle(cornerRadius: 50))
+                    }
+                    
+                    
                     
                 }
-                .padding(EdgeInsets(top: -10, leading: 10, bottom: 0, trailing:10))
+                .disabled(auth.isLoading)
+                
+//                ZStack{
+//                    RoundedRectangle(cornerRadius: 10)
+//                        .frame(height: 50)
+//                        .foregroundStyle(Color(.red))
+//                        .opacity(0.4)
+//                    HStack{
+//                        Image(systemName: "rectangle.portrait.and.arrow.right")
+//                            .resizable()
+//                            .frame(width: 20, height: 20)
+//                            .foregroundStyle(Color(.white))
+//                            .padding(5)
+//                        Text("Log Out")
+//                            .font(.system(size: 18))
+//                        Spacer()
+//                        Image(systemName: "chevron.right")
+//                    }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+//                    .foregroundStyle(Color.white)
+//                    
+//                }
+//                .padding(EdgeInsets(top: -10, leading: 10, bottom: 0, trailing:10))
                 
             }
         }
