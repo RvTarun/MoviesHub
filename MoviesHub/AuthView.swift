@@ -66,32 +66,48 @@ struct AuthView: View {
     @State private var selection : Int = 0
     
     var body: some View {
-        VStack(spacing: 15){
-//            Spacer()
-            Text("Movies Hub")
-                .font(.largeTitle)
-            Picker("pick an option", selection: $selection){
-                Text("Login").tag(0)
-                Text("Sign Up").tag(1)
-            }
-            .pickerStyle(.segmented)
-            .padding(.horizontal)
-            
-            if selection == 0{
-                LogInView(auth: auth)
-            }
-            else{
-                SingUpView(auth: auth)
-            }
-            
-            if let error = auth.errorMessage{
-                Text(error)
-                    .foregroundColor(.red)
-//                    .padding()
-            }
+        ZStack{
+            LinearGradient(colors: [.black,.red.opacity(0.8),.black], startPoint: .top, endPoint: .bottom)
                 
-        }
-        .toolbar(.hidden)
+            VStack(spacing: 15){
+    //            Spacer()
+                
+                ZStack{
+                    Text("Movies Hub")
+                        .font(.system(size: 50))
+                        .bold()
+                        .foregroundStyle(Color.white.opacity(0.5))
+                        .shadow(radius: 10)
+                    Text("Movies Hub")
+                        .font(.system(size: 48))
+                        .bold()
+                        .foregroundStyle(Color.black)
+                        .shadow(radius: 10)
+                }
+                Picker("pick an option", selection: $selection){
+                    Text("Login").tag(0)
+                    Text("Sign Up").tag(1)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                
+                if selection == 0{
+                    LogInView(auth: auth)
+                }
+                else{
+                    SingUpView(auth: auth)
+                }
+                
+                if let error = auth.errorMessage{
+                    Text(error)
+                        .foregroundColor(.red)
+    //                    .padding()
+                }
+                    
+            }
+            .toolbar(.hidden)
+        }.ignoresSafeArea()
+        
     }
    
 }
@@ -110,19 +126,22 @@ struct LogInView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .textInputAutocapitalization(.never)
                 .keyboardType(.emailAddress)
+                .shadow(radius: 10)
             
             SecureField("Password", text: $password)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .shadow(radius: 10)
             
             Button(action: {
                 auth.login(username: username, password: password)
             }){
                 Text("Log In")
                     .frame(maxWidth: .infinity)
-                    .font(.headline)
+                    .font(.system(size: 20))
+                    .bold()
                     .foregroundColor(.white)
                     .padding()
-                    .background(Color.blue)
+                    .background(Color.black)
                     .clipShape(RoundedRectangle(cornerRadius: 50))
                     
             }
@@ -145,23 +164,27 @@ struct SingUpView: View {
         VStack(alignment: .center){
             TextField("Name", text: $name)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .shadow(radius: 10)
             TextField("Username", text: $username)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .textInputAutocapitalization(.never)
                 .keyboardType(.emailAddress)
+                .shadow(radius: 10)
             
             SecureField("Password", text: $password)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .shadow(radius: 10)
             
             Button(action: {
                 auth.singup(name: name, username: username, password: password)
             }){
                 Text("Sign Up")
-                    .font(.headline)
+                    .font(.system(size: 20))
+                    .bold()
                     .frame(maxWidth: .infinity)
                     .foregroundColor(.white)
                     .padding()
-                    .background(Color.blue)
+                    .background(Color.black)
                     .clipShape(RoundedRectangle(cornerRadius: 50))
                 
             }
