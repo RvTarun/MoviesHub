@@ -73,7 +73,7 @@ struct WatchList: View {
                         }
                     }
                 }
-                bottom()
+                WatchlistbottomView()
             }
             .ignoresSafeArea()
             .background(Color.black)
@@ -124,4 +124,59 @@ struct TopView: View {
         .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
         .foregroundStyle(Color.white.opacity(0.9))
     }
+}
+
+struct WatchlistbottomView: View {
+    var body: some View {
+        NavigationStack {
+            VStack{
+                HStack{
+                    Spacer()
+                    NavigationLink{
+                        homePagemovieView()
+                    }label: {
+                        VStack(alignment: .center){
+                            Image(systemName: "house")
+                                .resizable()
+                                .frame(width: 30, height: 25)
+                            Text("Home")
+                                .font(.caption)
+                        }
+                    }
+                    
+                    Spacer()
+                        VStack(alignment: .center){
+                            Image(systemName: "play.rectangle.on.rectangle")
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                            Text("Watchlist")
+                                .font(.caption)
+                        }
+                    Spacer()
+                    NavigationLink{
+                        ProfileView()
+                    }label: {
+                        VStack(alignment: .center){
+                            Image(systemName: "person")
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                            Text("Profile")
+                                .font(.caption)
+                        }
+                    }
+                    
+                    Spacer()
+                }
+                .foregroundStyle(Color(.white))
+                .overlay(
+                    Rectangle()
+                        .frame(height: 1)
+                        .foregroundColor(.gray)
+                        .offset(y: -32)
+                )
+            }
+            .frame(height: 50)
+        }
+    }
+    
 }

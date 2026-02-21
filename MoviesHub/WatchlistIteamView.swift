@@ -54,7 +54,7 @@ struct movieIteam: View {
                         }
                     }
                 }
-                bottom()
+//                bottom()
             }
             .ignoresSafeArea()
             .background(Color.black)

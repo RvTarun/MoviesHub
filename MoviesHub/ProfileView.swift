@@ -12,7 +12,7 @@ struct ProfileView: View {
             VStack{
                 interFace()
                 ProfileContent()
-                bottom()
+                ProfileViewBottom()
             }
             .background(Color(.black))
         }
@@ -178,36 +178,68 @@ struct ProfileContent: View {
                             .padding(10)
                             .background(Color.red.opacity(0.4))
                             .clipShape(RoundedRectangle(cornerRadius: 50))
-                    }
-                    
-                    
-                    
+                    }  
                 }
                 .disabled(auth.isLoading)
-                
-//                ZStack{
-//                    RoundedRectangle(cornerRadius: 10)
-//                        .frame(height: 50)
-//                        .foregroundStyle(Color(.red))
-//                        .opacity(0.4)
-//                    HStack{
-//                        Image(systemName: "rectangle.portrait.and.arrow.right")
-//                            .resizable()
-//                            .frame(width: 20, height: 20)
-//                            .foregroundStyle(Color(.white))
-//                            .padding(5)
-//                        Text("Log Out")
-//                            .font(.system(size: 18))
-//                        Spacer()
-//                        Image(systemName: "chevron.right")
-//                    }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
-//                    .foregroundStyle(Color.white)
-//                    
-//                }
-//                .padding(EdgeInsets(top: -10, leading: 10, bottom: 0, trailing:10))
                 
             }
         }
         
     }
+}
+
+
+struct ProfileViewBottom: View {
+    var body: some View {
+        NavigationStack {
+            VStack{
+                HStack{
+                    Spacer()
+                    NavigationLink{
+                        homePagemovieView()
+                    }label: {
+                        VStack(alignment: .center){
+                            Image(systemName: "house")
+                                .resizable()
+                                .frame(width: 30, height: 25)
+                            Text("Home")
+                                .font(.caption)
+                        }
+                    }
+                    
+                    Spacer()
+                    NavigationLink{
+                        WatchList()
+                    }label: {
+                        VStack(alignment: .center){
+                            Image(systemName: "play.rectangle.on.rectangle")
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                            Text("Watchlist")
+                                .font(.caption)
+                        }
+                    }
+                   
+                    Spacer()
+                        VStack(alignment: .center){
+                            Image(systemName: "person")
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                            Text("Profile")
+                                .font(.caption)
+                        }
+                    Spacer()
+                }
+                .foregroundStyle(Color(.white))
+                .overlay(
+                    Rectangle()
+                        .frame(height: 1)
+                        .foregroundColor(.gray)
+                        .offset(y: -32)
+                )
+            }
+            .frame(height: 50)
+        }
+    }
+    
 }
