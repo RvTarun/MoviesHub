@@ -228,6 +228,7 @@ struct ProfileViewBottom: View {
                             Text("Profile")
                                 .font(.caption)
                         }
+                        .foregroundStyle(Color.red)
                     Spacer()
                 }
                 .foregroundStyle(Color(.white))

@@ -133,13 +133,14 @@ struct HomeBottomView: View {
             VStack{
                 HStack{
                     Spacer()
-                        VStack(alignment: .center){
-                            Image(systemName: "house")
-                                .resizable()
-                                .frame(width: 30, height: 25)
-                            Text("Home")
-                                .font(.caption)
+                    VStack(alignment: .center){
+                        Image(systemName: "house")
+                            .resizable()
+                            .frame(width: 30, height: 25)
+                        Text("Home")
+                            .font(.caption)
                     }
+                    .foregroundStyle(Color.red)
                     
                     Spacer()
                     NavigationLink{
@@ -153,7 +154,7 @@ struct HomeBottomView: View {
                                 .font(.caption)
                         }
                     }
-                   
+                    
                     Spacer()
                     NavigationLink{
                         ProfileView()

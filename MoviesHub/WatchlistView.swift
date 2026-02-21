@@ -102,15 +102,7 @@ struct WatchList: View {
 
 struct TopView: View {
     var body: some View {
-        HStack{
-            NavigationLink{
-                homePagemovieView()
-            }label: {
-                Image(systemName: "chevron.left")
-                    .resizable()
-                    .frame(width: 10, height: 20)
-            }
-            
+        HStack{            
             Spacer()
             Text("Watchlist")
                 .font(.title)
@@ -152,6 +144,7 @@ struct WatchlistbottomView: View {
                             Text("Watchlist")
                                 .font(.caption)
                         }
+                        .foregroundStyle(Color.red)
                     Spacer()
                     NavigationLink{
                         ProfileView()
