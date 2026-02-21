@@ -51,36 +51,49 @@ struct ProfileContent: View {
                         .opacity(0.7)
                 }
                 .foregroundStyle(Color(.white))
-                
-                Text("Watchlist")
-                    .foregroundStyle(Color(.white))
-                    .font(.system(size: 22, weight: .bold, design: .default))
-                    .padding(10)
-                ScrollView(.horizontal, showsIndicators: false){
-                    LazyHGrid(rows: count){
-                        ForEach(imgName, id: \.self){i in
-                            Image(imgName[Int.random(in: 0..<14)])
-                                .resizable()
-                                .cornerRadius(10)
-                                .frame(minHeight: 100)
-                                .frame(maxHeight: 400)
-                                .clipped()
-                                .overlay(
-                                    Image(systemName: "play.fill")
-                                        .resizable()
-                                        .foregroundColor(.gray)
-                                        .opacity(0.5)
-                                        .frame(width: 50, height: 50)
-                                )
-                                .aspectRatio(1/1.8, contentMode: .fit)
-                        }
-                    }
-                }
-                .padding(EdgeInsets(top: -80, leading: 1, bottom: -80, trailing: 1))
+                //----------------------------------------------------
                 Text("Continue Watching")
                     .foregroundStyle(Color(.white))
                     .font(.system(size: 22, weight: .bold, design: .default))
                     .padding(10)
+                
+                // ContinueWatching
+                ScrollView(.horizontal, showsIndicators: false){
+                    LazyHGrid(rows: count){
+                        ForEach(imgName, id: \.self){i in
+                            ZStack{
+                                Image(imgName[Int.random(in: 0..<14)])
+                                    .resizable()
+                                    .cornerRadius(10)
+                                    .frame(minHeight: 100)
+                                    .frame(maxHeight: 400)
+                                    .clipped()
+                                    .overlay(
+                                        Image(systemName: "play.fill")
+                                            .resizable()
+                                            .foregroundColor(.gray)
+                                            .opacity(0.5)
+                                            .frame(width: 50, height: 50)
+                                    )
+                                    .aspectRatio(1/1.8, contentMode: .fit)
+                                
+                                ProgressView(value: 40.7, total: 100)
+                                    .tint(Color(.red))
+                                    .padding(EdgeInsets(top: 0, leading: 2, bottom: -10, trailing: 2))
+                                    .offset(y: 120)
+                            }
+                        }
+                    }
+                }
+                .padding(EdgeInsets(top: -80, leading: 1, bottom: -80, trailing: 1))
+                
+                //-------------------------------------------------------
+                Text("Watchlist")
+                    .foregroundStyle(Color(.white))
+                    .font(.system(size: 22, weight: .bold, design: .default))
+                    .padding(10)
+                
+                // watchList
                 ScrollView(.horizontal, showsIndicators: false){
                     LazyHGrid(rows: count){
                         ForEach(imgName, id: \.self){i in
@@ -102,6 +115,9 @@ struct ProfileContent: View {
                     }
                 }
                 .padding(EdgeInsets(top: -80, leading: 1, bottom: -80, trailing: 1))
+                
+                
+                
                 ZStack{
                     RoundedRectangle(cornerRadius: 10)
                         .frame(height: 50)
