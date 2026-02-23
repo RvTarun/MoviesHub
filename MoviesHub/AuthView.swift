@@ -66,39 +66,41 @@ struct AuthView: View {
     @State private var selection : Int = 0
     
     var body: some View {
-        ZStack{
-            LinearGradient(colors: [.black,.red.opacity(0.8),.black], startPoint: .top, endPoint: .bottom)
-            VStack(alignment: .center,spacing: 30){
-//                    Spacer()
-                    Image("logo")
-                        .resizable()
-                        .frame(width: 300, height: 300)
-                        .shadow(radius: 30)
-                        .padding(EdgeInsets(top: 70, leading: 0, bottom: 0, trailing: 0))
-                    Picker("pick an option", selection: $selection){
-                        Text("Login").tag(0)
-                        Text("Sign Up").tag(1)
+        NavigationStack{
+            ZStack{
+                LinearGradient(colors: [.black,.red.opacity(0.8),.black], startPoint: .top, endPoint: .bottom)
+                VStack(alignment: .center,spacing: 30){
+    //                    Spacer()
+                        Image("logo")
+                            .resizable()
+                            .frame(width: 300, height: 300)
+                            .shadow(radius: 30)
+                            .padding(EdgeInsets(top: 70, leading: 0, bottom: 0, trailing: 0))
+                        Picker("pick an option", selection: $selection){
+                            Text("Sign Up").tag(0)
+                            Text("Log In").tag(1)
+                        }
+                        .pickerStyle(.segmented)
+                        .padding(.horizontal)
+                        .padding(EdgeInsets(top: -40, leading: 0, bottom: 0, trailing: 0))
+                        
+                        if selection == 0{
+                            SingUpView(auth: auth)
+                        }
+                        else{
+                            LogInView(auth: auth)
+                        }
+                        
+                        if let error = auth.errorMessage{
+                            Text(error)
+                                .foregroundColor(.red)
+                        }
+                        Spacer()
                     }
-                    .pickerStyle(.segmented)
-                    .padding(.horizontal)
-                    .padding(EdgeInsets(top: -40, leading: 0, bottom: 0, trailing: 0))
-                    
-                    if selection == 0{
-                        LogInView(auth: auth)
-                    }
-                    else{
-                        SingUpView(auth: auth)
-                    }
-                    
-                    if let error = auth.errorMessage{
-                        Text(error)
-                            .foregroundColor(.red)
-                    }
-                    Spacer()
-                }
-                .toolbar(.hidden)
-        }.ignoresSafeArea()
-        
+                    .toolbar(.hidden)
+            }.ignoresSafeArea()
+           
+        }
     }
    
 }
@@ -122,6 +124,25 @@ struct LogInView: View {
             SecureField("Password", text: $password)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .shadow(radius: 10)
+            
+            HStack{
+                NavigationLink{
+                AuthView(auth: auth)
+                } label: {
+                    Text("New User")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Color.green.opacity(0.8))
+                }
+                Spacer()
+                NavigationLink{
+                    forgetPassView()
+                } label: {
+                    Text("Forgot Password?")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Color.green.opacity(0.8))
+                }
+                
+            }
             
             Button(action: {
                 auth.login(username: username, password: password)
