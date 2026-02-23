@@ -132,6 +132,7 @@ struct ProfileContent: View {
                        
                     } label: {
                         Text("\(Image(systemName: "bookmark.fill")) Manage Watchlist")
+                            
                             .font(.headline)
                             .frame(maxWidth: .infinity)
                             .foregroundColor(.white)
@@ -143,7 +144,7 @@ struct ProfileContent: View {
 //-----------------------------------History Button------------------------------------------------\\
 
                     NavigationLink{
-                       
+                       HistoryView()
                     } label: {
                         Text("\(Image(systemName: "clock.fill")) History")
                             .font(.headline)
@@ -156,7 +157,7 @@ struct ProfileContent: View {
 //-----------------------------------Change Email Button------------------------------------------------\\
 
                     NavigationLink{
-                       
+                       ChangeEmailView()
                     } label: {
                         Text("\(Image(systemName: "envelope.fill")) Change Email")
                             .font(.headline)
