@@ -12,7 +12,7 @@ struct ProfileEditView: View {
             ZStack{
                 Color(.black)
                     .opacity(0.9)
-                VStack{
+                VStack(alignment: .center){
                     Spacer()
                     ZStack{
                         Image(systemName: "person.circle.fill")
