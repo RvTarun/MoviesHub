@@ -31,7 +31,7 @@ struct ProfileContent: View {
     var body: some View {
         NavigationStack{
             ScrollView{
-                VStack(alignment: .leading){
+                VStack(alignment: .center){
                     HStack{
                         Image(systemName: "person.circle.fill")
                             .resizable()
@@ -57,17 +57,55 @@ struct ProfileContent: View {
                         
                     }
                     .foregroundStyle(Color(.white))
-                    //----------------------------------------------------
-                    Text("Continue Watching")
-                        .foregroundStyle(Color(.white))
-                        .font(.system(size: 22, weight: .bold, design: .default))
-                        .padding(10)
-                    
-                    // ContinueWatching
-                    ScrollView(.horizontal, showsIndicators: false){
-                        LazyHGrid(rows: count){
-                            ForEach(imgName, id: \.self){i in
-                                ZStack{
+//---------------------------------Continue Watching Section---------------------------\\
+                    VStack(alignment: .leading){
+                        Text("Continue Watching")
+                            .foregroundStyle(Color(.white))
+                            .font(.system(size: 22, weight: .bold, design: .default))
+                            .padding(10)
+                        
+                        // ContinueWatching
+                        ScrollView(.horizontal, showsIndicators: false){
+                            LazyHGrid(rows: count){
+                                ForEach(imgName, id: \.self){i in
+                                    ZStack{
+                                        Image(imgName[Int.random(in: 0..<14)])
+                                            .resizable()
+                                            .cornerRadius(10)
+                                            .frame(minHeight: 100)
+                                            .frame(maxHeight: 400)
+                                            .clipped()
+                                            .overlay(
+                                                Image(systemName: "play.fill")
+                                                    .resizable()
+                                                    .foregroundColor(.gray)
+                                                    .opacity(0.5)
+                                                    .frame(width: 50, height: 50)
+                                            )
+                                            .aspectRatio(1/1.8, contentMode: .fit)
+                                        
+                                        ProgressView(value: 40.7, total: 100)
+                                            .tint(Color(.red))
+                                            .padding(EdgeInsets(top: 0, leading: 2, bottom: -10, trailing: 2))
+                                            .offset(y: 120)
+                                    }
+                                }
+                            }
+                        }
+                        .padding(EdgeInsets(top: -80, leading: 1, bottom: -70, trailing: 1))
+                        
+                    }
+//---------------------------------WatchList Section---------------------------\\
+                    VStack(alignment: .leading){
+                        Text("Watchlist")
+                            .foregroundStyle(Color(.white))
+                            .font(.system(size: 22, weight: .bold, design: .default))
+                            .padding(10)
+                        
+                        // watchList
+                        ScrollView(.horizontal, showsIndicators: false){
+                            LazyHGrid(rows: count){
+                                ForEach(imgName, id: \.self){i in
                                     Image(imgName[Int.random(in: 0..<14)])
                                         .resizable()
                                         .cornerRadius(10)
@@ -82,111 +120,54 @@ struct ProfileContent: View {
                                                 .frame(width: 50, height: 50)
                                         )
                                         .aspectRatio(1/1.8, contentMode: .fit)
-                                    
-                                    ProgressView(value: 40.7, total: 100)
-                                        .tint(Color(.red))
-                                        .padding(EdgeInsets(top: 0, leading: 2, bottom: -10, trailing: 2))
-                                        .offset(y: 120)
                                 }
                             }
                         }
-                    }
-                    .padding(EdgeInsets(top: -80, leading: 1, bottom: -80, trailing: 1))
-                    
-                    //-------------------------------------------------------
-                    Text("Watchlist")
-                        .foregroundStyle(Color(.white))
-                        .font(.system(size: 22, weight: .bold, design: .default))
-                        .padding(10)
-                    
-                    // watchList
-                    ScrollView(.horizontal, showsIndicators: false){
-                        LazyHGrid(rows: count){
-                            ForEach(imgName, id: \.self){i in
-                                Image(imgName[Int.random(in: 0..<14)])
-                                    .resizable()
-                                    .cornerRadius(10)
-                                    .frame(minHeight: 100)
-                                    .frame(maxHeight: 400)
-                                    .clipped()
-                                    .overlay(
-                                        Image(systemName: "play.fill")
-                                            .resizable()
-                                            .foregroundColor(.gray)
-                                            .opacity(0.5)
-                                            .frame(width: 50, height: 50)
-                                    )
-                                    .aspectRatio(1/1.8, contentMode: .fit)
-                            }
-                        }
-                    }
-                    .padding(EdgeInsets(top: -80, leading: 1, bottom: -80, trailing: 1))
-                    
-                    
-                    
-                    ZStack{
-                        RoundedRectangle(cornerRadius: 10)
-                            .frame(height: 50)
-                            .foregroundStyle(Color(.red))
-                            .opacity(0.4)
-                        HStack{
-                            Image(systemName: "bookmark.fill")
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                                .foregroundStyle(Color(.white))
-                                .padding(5)
-                            Text("Manage Watchlist")
-                                .font(.system(size: 18))
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                        }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
-                        .foregroundStyle(Color.white)
+                        .padding(EdgeInsets(top: -80, leading: 1, bottom: -60, trailing: 1))
                         
                     }
-                    .padding(EdgeInsets(top: 20, leading: 10, bottom: 0, trailing:10))
-                    
-                    ZStack{
-                        RoundedRectangle(cornerRadius: 10)
-                            .frame(height: 50)
-                            .foregroundStyle(Color(.red))
-                            .opacity(0.4)
-                        HStack{
-                            Image(systemName: "clock.fill")
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                                .foregroundStyle(Color(.white))
-                                .padding(5)
-                            Text("Viewing History")
-                                .font(.system(size: 18))
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                        }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
-                        .foregroundStyle(Color.white)
-                        
+                   
+//-----------------------------------Bookmark Button------------------------------------------------\\
+                    NavigationLink{
+                       
+                    } label: {
+                        Text("\(Image(systemName: "bookmark.fill")) Manage Watchlist")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .background(Color.red.opacity(0.4))
+                            .clipShape(RoundedRectangle(cornerRadius: 50))
                     }
-                    .padding(EdgeInsets(top: -10, leading: 10, bottom: 0, trailing:10))
                     
-                    ZStack{
-                        RoundedRectangle(cornerRadius: 10)
-                            .frame(height: 50)
-                            .foregroundStyle(Color(.red))
-                            .opacity(0.4)
-                        HStack{
-                            Image(systemName: "envelope.fill")
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                                .foregroundStyle(Color(.white))
-                                .padding(5)
-                            Text("Change Email")
-                                .font(.system(size: 18))
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                        }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
-                        .foregroundStyle(Color.white)
-                        
+//-----------------------------------History Button------------------------------------------------\\
+
+                    NavigationLink{
+                       
+                    } label: {
+                        Text("\(Image(systemName: "clock.fill")) History")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .background(Color.red.opacity(0.4))
+                            .clipShape(RoundedRectangle(cornerRadius: 50))
                     }
-                    .padding(EdgeInsets(top: -10, leading: 10, bottom: 0, trailing:10))
-                    
+//-----------------------------------Change Email Button------------------------------------------------\\
+
+                    NavigationLink{
+                       
+                    } label: {
+                        Text("\(Image(systemName: "envelope.fill")) Change Email")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .background(Color.red.opacity(0.4))
+                            .clipShape(RoundedRectangle(cornerRadius: 50))
+                    }
+//-----------------------------------Bookmark Button------------------------------------------------\\
+
                     Button(action: {
                         auth.logout()
                     }){
@@ -203,6 +184,14 @@ struct ProfileContent: View {
                         }
                     }
                     .disabled(auth.isLoading)
+                    Spacer()
+                    VStack(spacing: 1){
+                        Text("MoviesHub")
+                        Text("Version 1.0")
+                    }
+                    .font(.system(size: 12))
+                    .foregroundStyle(Color(.gray))
+                    Spacer()
                     
                 }
             }
