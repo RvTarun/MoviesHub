@@ -68,44 +68,35 @@ struct AuthView: View {
     var body: some View {
         ZStack{
             LinearGradient(colors: [.black,.red.opacity(0.8),.black], startPoint: .top, endPoint: .bottom)
-                
-            VStack(spacing: 15){
-    //            Spacer()
-                
-                ZStack{
-                    Text("Movies Hub")
-                        .font(.system(size: 50))
-                        .bold()
-                        .foregroundStyle(Color.white.opacity(0.5))
-                        .shadow(radius: 10)
-                    Text("Movies Hub")
-                        .font(.system(size: 48))
-                        .bold()
-                        .foregroundStyle(Color.black)
-                        .shadow(radius: 10)
-                }
-                Picker("pick an option", selection: $selection){
-                    Text("Login").tag(0)
-                    Text("Sign Up").tag(1)
-                }
-                .pickerStyle(.segmented)
-                .padding(.horizontal)
-                
-                if selection == 0{
-                    LogInView(auth: auth)
-                }
-                else{
-                    SingUpView(auth: auth)
-                }
-                
-                if let error = auth.errorMessage{
-                    Text(error)
-                        .foregroundColor(.red)
-    //                    .padding()
-                }
+            VStack(alignment: .center,spacing: 30){
+//                    Spacer()
+                    Image("logo")
+                        .resizable()
+                        .frame(width: 300, height: 300)
+                        .shadow(radius: 30)
+                        .padding(EdgeInsets(top: 70, leading: 0, bottom: 0, trailing: 0))
+                    Picker("pick an option", selection: $selection){
+                        Text("Login").tag(0)
+                        Text("Sign Up").tag(1)
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal)
+                    .padding(EdgeInsets(top: -40, leading: 0, bottom: 0, trailing: 0))
                     
-            }
-            .toolbar(.hidden)
+                    if selection == 0{
+                        LogInView(auth: auth)
+                    }
+                    else{
+                        SingUpView(auth: auth)
+                    }
+                    
+                    if let error = auth.errorMessage{
+                        Text(error)
+                            .foregroundColor(.red)
+                    }
+                    Spacer()
+                }
+                .toolbar(.hidden)
         }.ignoresSafeArea()
         
     }
@@ -121,7 +112,7 @@ struct LogInView: View {
     @State private var password: String = ""
     
     var body: some View {
-        VStack(alignment: .center){
+        VStack(alignment: .center,spacing: 15){
             TextField("Username", text: $username)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .textInputAutocapitalization(.never)
@@ -161,7 +152,7 @@ struct SingUpView: View {
     @State private var password: String = ""
     
     var body: some View {
-        VStack(alignment: .center){
+        VStack(alignment: .center, spacing: 15){
             TextField("Name", text: $name)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .shadow(radius: 10)
