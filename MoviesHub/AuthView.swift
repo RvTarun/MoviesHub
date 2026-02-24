@@ -6,8 +6,9 @@
 //
 import SwiftUI
 import Combine
+import FirebaseAuth
 
-class AuthViewModel: ObservableObject {
+final class AuthViewModel: ObservableObject {
     @Published var isauthenticated: Bool = false
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?

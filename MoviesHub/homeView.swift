@@ -96,7 +96,7 @@ struct movieFeed: View {
                     .foregroundStyle(Color.white)
                 ScrollView(.horizontal, showsIndicators: false){
                             LazyHGrid(rows: count){
-                                ForEach(MovieD.sorted(by: <), id: \.key){key, value in
+                                ForEach(Array(MovieD).shuffled(), id: \.key) { key, value in
                                     NavigationLink{
                                         movieIteam(currentMovie: "\(key)", currentCategory: "\(value)")
                                     }label: {
@@ -183,3 +183,4 @@ struct HomeBottomView: View {
     }
     
 }
+
