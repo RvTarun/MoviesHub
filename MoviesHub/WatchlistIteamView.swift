@@ -35,23 +35,23 @@ struct movieIteam: View {
                         Text("Cast: Ajay Devgn, Ranveer Singh, Alia Bhatt, Deepika Padukone, John Abraham, Rami Malek, Javed Jaffrey, Anushka Sharma, Aamir Khan, Kunal Nayyar, Abhishek Bachchan, Sonam Kapoor, Alia Bhatt, Aamir Khan, Kunal Nayyar, Abhishek Bachchan, Sonam Kapoor")
                             .foregroundStyle(Color.white)
                             .font(.system(size: 15))
-                       ForEach(1..<5, id: \.self){i in
-                           HStack{
-                               Image("24")
-                                   .resizable()
-                                   .frame(width: 150, height: 150)
-                                   .cornerRadius(20)
-                               VStack(alignment: .leading){
-                                   Text("Ajay Devgn")
-                                       .foregroundStyle(Color.white)
-                                       .font(.system(size: 22).bold())
-                                   Text("as Robin")
-                                       .foregroundStyle(Color.white)
-                                       .font(.system(size: 18))
-
-                               }
-                           }
-                        }
+//                       ForEach(1..<5, id: \.self){i in
+//                           HStack{
+//                               Image("24")
+//                                   .resizable()
+//                                   .frame(width: 150, height: 150)
+//                                   .cornerRadius(20)
+//                               VStack(alignment: .leading){
+//                                   Text("Ajay Devgn")
+//                                       .foregroundStyle(Color.white)
+//                                       .font(.system(size: 22).bold())
+//                                   Text("as Robin")
+//                                       .foregroundStyle(Color.white)
+//                                       .font(.system(size: 18))
+//
+//                               }
+//                           }
+//                        }
                     }
                 }
 //                bottom()

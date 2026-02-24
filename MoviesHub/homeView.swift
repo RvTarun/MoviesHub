@@ -41,7 +41,7 @@ struct promotionalView: View {
         ScrollView(.horizontal, showsIndicators: false){
             HStack(alignment: .top){
                 LazyHGrid(rows: count){
-                    ForEach(MovieD.sorted(by: <), id: \.key){key, value in
+                    ForEach(Array(MovieD).shuffled(), id: \.key){key, value in
                         ZStack(alignment: .leading){
                             Image("\(key)")
                                 .resizable()
@@ -50,6 +50,7 @@ struct promotionalView: View {
                                 .frame(maxHeight: 400)
                                 .clipped()
                                 .aspectRatio(1.6/1.1, contentMode: .fit)
+                            
                             VStack(alignment: .leading){
                                 NavigationLink{
                                     movieIteam(currentMovie: "\(key)", currentCategory: "\(value)")

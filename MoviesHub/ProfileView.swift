@@ -67,9 +67,9 @@ struct ProfileContent: View {
                         // ContinueWatching
                         ScrollView(.horizontal, showsIndicators: false){
                             LazyHGrid(rows: count){
-                                ForEach(imgName, id: \.self){i in
+                                ForEach(Array(MovieD).shuffled(), id: \.key){key , value in
                                     ZStack{
-                                        Image(imgName[Int.random(in: 0..<14)])
+                                        Image("\(key)")
                                             .resizable()
                                             .cornerRadius(10)
                                             .frame(minHeight: 100)
@@ -105,8 +105,8 @@ struct ProfileContent: View {
                         // watchList
                         ScrollView(.horizontal, showsIndicators: false){
                             LazyHGrid(rows: count){
-                                ForEach(imgName, id: \.self){i in
-                                    Image(imgName[Int.random(in: 0..<14)])
+                                ForEach(Array(MovieD).shuffled(), id: \.key){key, value in
+                                    Image("\(key)")
                                         .resizable()
                                         .cornerRadius(10)
                                         .frame(minHeight: 100)
@@ -129,12 +129,12 @@ struct ProfileContent: View {
                    
 //-----------------------------------Bookmark Button------------------------------------------------\\
                     NavigationLink{
-                       
+                       BookmarkView()
                     } label: {
                         Text("\(Image(systemName: "bookmark.fill")) Manage Watchlist")
                             
                             .font(.headline)
-                            .frame(maxWidth: .infinity)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundColor(.white)
                             .padding(10)
                             .background(Color.red.opacity(0.4))
@@ -148,7 +148,7 @@ struct ProfileContent: View {
                     } label: {
                         Text("\(Image(systemName: "clock.fill")) History")
                             .font(.headline)
-                            .frame(maxWidth: .infinity)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundColor(.white)
                             .padding(10)
                             .background(Color.red.opacity(0.4))
@@ -161,7 +161,7 @@ struct ProfileContent: View {
                     } label: {
                         Text("\(Image(systemName: "envelope.fill")) Change Email")
                             .font(.headline)
-                            .frame(maxWidth: .infinity)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundColor(.white)
                             .padding(10)
                             .background(Color.red.opacity(0.4))
@@ -257,3 +257,4 @@ struct ProfileViewBottom: View {
     }
     
 }
+
