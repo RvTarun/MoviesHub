@@ -1,17 +1,14 @@
-//
-//  MoviesHubApp.swift
-//  MoviesHub
-//
-//  Created by iMac02 on 10/02/26.
-//
-
 import SwiftUI
+import FirebaseCore
 
 @main
-struct MoviesHubApp: App {
+@MainActor struct MoviesHubApp: App {
+    init() {
+        FirebaseApp.configure()
+    }
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AuthView(auth: AuthViewModel())
         }
     }
 }

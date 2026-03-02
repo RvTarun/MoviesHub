@@ -7,36 +7,87 @@
 import SwiftUI
 import Combine
 import FirebaseAuth
+import FirebaseFirestore
+import FirebaseCore
 
 final class AuthViewModel: ObservableObject {
+    init() {
+        if FirebaseApp.app() == nil {
+            FirebaseApp.configure()
+        }
+    }
+    
     @Published var isauthenticated: Bool = false
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     
-    private var users: [String: String] = [:]
+    private lazy var auth: Auth = {
+        if FirebaseApp.app() == nil {
+            FirebaseApp.configure()
+        }
+        return Auth.auth()
+    }()
     
+    private var db: Firestore {
+        if FirebaseApp.app() == nil {
+            FirebaseApp.configure()
+        }
+        return Firestore.firestore()
+    }
     
     func login(username: String, password: String) {
         errorMessage = nil
         isLoading = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
-            guard let self else { return }
+        let email = username.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedPassword = password.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !email.isEmpty, !trimmedPassword.isEmpty else {
+            self.errorMessage = "Please fill all fields."
             self.isLoading = false
-            if username.isEmpty || password.isEmpty {
-                self.errorMessage = "Please fill all fields."
+            return
+        }
+
+        auth.signIn(withEmail: email, password: trimmedPassword) { [weak self] result, error in
+            guard let self else { return }
+            if let error = error {
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.errorMessage = error.localizedDescription
+                    self.isauthenticated = false
+                }
                 return
             }
-            
-            guard let savepassword = self.users[username] else{
-                self.errorMessage = "Invalid username or password."
+
+            guard let uid = result?.user.uid else {
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.errorMessage = "Unable to retrieve user information."
+                    self.isauthenticated = false
+                }
                 return
             }
-            guard savepassword == password else{
-                self.errorMessage = "Password is incorrect."
-                return
+
+            // Verify user document exists in Firestore before proceeding
+            self.db.collection("users").document(uid).getDocument { snapshot, err in
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    if let err = err {
+                        self.errorMessage = err.localizedDescription
+                        self.isauthenticated = false
+                        return
+                    }
+
+                    guard let snapshot = snapshot, snapshot.exists else {
+                        self.errorMessage = "Account not found in database."
+                        self.isauthenticated = false
+                        return
+                    }
+
+                    // Success: credentials valid and user document exists
+                    self.errorMessage = nil
+                    self.isauthenticated = true
+                }
             }
-            self.errorMessage = nil
-            self.isauthenticated = true
         }
     }
     
@@ -44,21 +95,67 @@ final class AuthViewModel: ObservableObject {
     func singup (name: String, username: String, password: String) {
         errorMessage = nil
         isLoading = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
-            guard let self else { return }
+
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let email = username.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedPassword = password.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !trimmedName.isEmpty, !email.isEmpty, !trimmedPassword.isEmpty else {
+            self.errorMessage = "Please fill all fields."
             self.isLoading = false
-            if name.isEmpty || username.isEmpty || password.isEmpty {
-                self.errorMessage = "Please fill all fields."
+            return
+        }
+
+        auth.createUser(withEmail: email, password: trimmedPassword) { [weak self] result, error in
+            guard let self else { return }
+            if let error = error {
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.errorMessage = error.localizedDescription
+                }
                 return
             }
-            self.users[username] = password
-            self.errorMessage = nil
-            self.isauthenticated = true
+
+            guard let uid = result?.user.uid else {
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.errorMessage = "Unable to retrieve user information."
+                }
+                return
+            }
+
+            let userData: [String: Any] = [
+                "uid": uid,
+                "name": trimmedName,
+                "email": email,
+                "createdAt": FieldValue.serverTimestamp()
+            ]
+
+            db.collection("users").document(uid).setData(userData) { [weak self] err in
+                guard let self else { return }
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    if let err = err {
+                        self.errorMessage = err.localizedDescription
+                        self.isauthenticated = false
+                    } else {
+                        self.errorMessage = nil
+                        withAnimation {
+                            self.isauthenticated = true
+                        }
+                    }
+                }
+            }
         }
     }
     
     func logout() {
-        isauthenticated = false
+        do {
+            try auth.signOut()
+            isauthenticated = false
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }
 
@@ -68,39 +165,42 @@ struct AuthView: View {
     
     var body: some View {
         NavigationStack{
-            ZStack{
+            ZStack {
                 LinearGradient(colors: [.black,.red.opacity(0.8),.black], startPoint: .top, endPoint: .bottom)
                 VStack(alignment: .center,spacing: 30){
-    //                    Spacer()
-                        Image("logo")
-                            .resizable()
-                            .frame(width: 300, height: 300)
-                            .shadow(radius: 30)
-                            .padding(EdgeInsets(top: 70, leading: 0, bottom: 0, trailing: 0))
-                        Picker("pick an option", selection: $selection){
-                            Text("Sign Up").tag(0)
-                            Text("Log In").tag(1)
-                        }
-                        .pickerStyle(.segmented)
-                        .padding(.horizontal)
-                        .padding(EdgeInsets(top: -40, leading: 0, bottom: 0, trailing: 0))
-                        
-                        if selection == 0{
-                            SingUpView(auth: auth)
-                        }
-                        else{
-                            LogInView(auth: auth)
-                        }
-                        
-                        if let error = auth.errorMessage{
-                            Text(error)
-                                .foregroundColor(.red)
-                        }
-                        Spacer()
+                    Image("logo")
+                        .resizable()
+                        .frame(width: 300, height: 300)
+                        .shadow(radius: 30)
+                        .padding(EdgeInsets(top: 70, leading: 0, bottom: 0, trailing: 0))
+                    Picker("pick an option", selection: $selection){
+                        Text("Sign Up").tag(0)
+                        Text("Log In").tag(1)
                     }
-                    .toolbar(.hidden)
-            }.ignoresSafeArea()
-           
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal)
+                    .padding(EdgeInsets(top: -40, leading: 0, bottom: 0, trailing: 0))
+
+                    if selection == 0{
+                        LogInView(auth: auth)
+                    }
+                    else{
+                        SingUpView(auth: auth)
+                        
+                    }
+
+                    if let error = auth.errorMessage{
+                        Text(error)
+                            .foregroundColor(.red)
+                    }
+                    Spacer()
+                }
+                .toolbar(.hidden)
+            }
+            .ignoresSafeArea()
+            .navigationDestination(isPresented: $auth.isauthenticated) {
+                HomeView(auth: auth)
+            }
         }
     }
    
@@ -127,9 +227,9 @@ struct LogInView: View {
                 .shadow(radius: 10)
             
             HStack{
-                NavigationLink{
-                AuthView(auth: auth)
-                } label: {
+                Button(action: {
+                    // You can control the selection from parent if needed
+                }) {
                     Text("New User")
                         .font(.system(size: 12))
                         .foregroundStyle(Color.green.opacity(0.8))
@@ -208,5 +308,19 @@ struct SingUpView: View {
         .padding(.horizontal)
     }
     
+}
+
+struct HomeView: View {
+    @ObservedObject var auth: AuthViewModel
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Welcome to Home")
+                .font(.title)
+            Button("Log out") {
+                auth.logout()
+            }
+        }
+        .padding()
+    }
 }
 
