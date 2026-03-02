@@ -92,7 +92,7 @@ final class AuthViewModel: ObservableObject {
     }
     
     
-    func singup (name: String, username: String, password: String) {
+    func signup (name: String, username: String, password: String) {
         errorMessage = nil
         isLoading = true
 
@@ -109,7 +109,7 @@ final class AuthViewModel: ObservableObject {
         auth.createUser(withEmail: email, password: trimmedPassword) { [weak self] result, error in
             guard let self else { return }
             if let error = error {
-                DispatchQueue.main.async {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                     self.isLoading = false
                     self.errorMessage = error.localizedDescription
                 }
@@ -131,7 +131,7 @@ final class AuthViewModel: ObservableObject {
                 "createdAt": FieldValue.serverTimestamp()
             ]
 
-            db.collection("users").document(uid).setData(userData) { [weak self] err in
+            self.db.collection("users").document(uid).setData(userData) { [weak self] err in
                 guard let self else { return }
                 DispatchQueue.main.async {
                     self.isLoading = false
@@ -140,9 +140,9 @@ final class AuthViewModel: ObservableObject {
                         self.isauthenticated = false
                     } else {
                         self.errorMessage = nil
-                        withAnimation {
+//                        withAnimation {
                             self.isauthenticated = true
-                        }
+//                        }
                     }
                 }
             }
@@ -183,10 +183,10 @@ struct AuthView: View {
                     .padding(EdgeInsets(top: -40, leading: 0, bottom: 0, trailing: 0))
 
                     if selection == 0{
-                        LogInView(auth: auth)
+                        LogInView(auth: auth, selection: $selection)
                     }
                     else{
-                        SingUpView(auth: auth)
+                        SignUpView(auth: auth)
                         
                     }
 
@@ -212,6 +212,7 @@ struct AuthView: View {
 
 struct LogInView: View {
     @ObservedObject var auth: AuthViewModel
+    @Binding var selection: Int
     @State private var username: String = ""
     @State private var password: String = ""
     
@@ -229,7 +230,7 @@ struct LogInView: View {
             
             HStack{
                 Button(action: {
-                    // You can control the selection from parent if needed
+                    selection = 1
                 }) {
                     Text("New User")
                         .font(.system(size: 12))
@@ -268,7 +269,7 @@ struct LogInView: View {
     
 }
 
-struct SingUpView: View {
+struct SignUpView: View {
     @ObservedObject var auth: AuthViewModel
     @State private var name: String = ""
     @State private var username: String = ""
@@ -290,7 +291,7 @@ struct SingUpView: View {
                 .shadow(radius: 10)
             
             Button(action: {
-                auth.singup(name: name, username: username, password: password)
+                auth.signup(name: name, username: username, password: password)
             }){
                 Text("Sign Up")
                     .font(.system(size: 20))
@@ -317,5 +318,4 @@ struct HomeView: View {
         homePagemovieView()
         }
     }
-
 
