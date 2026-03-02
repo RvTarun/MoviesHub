@@ -314,14 +314,8 @@ struct SingUpView: View {
 struct HomeView: View {
     @ObservedObject var auth: AuthViewModel
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Welcome to Home")
-                .font(.title)
-            Button("Log out") {
-                auth.logout()
-            }
+        homePagemovieView()
         }
-        .padding()
     }
-}
+
 
