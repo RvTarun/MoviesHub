@@ -174,8 +174,9 @@ struct AuthView: View {
                         .shadow(radius: 30)
                         .padding(EdgeInsets(top: 70, leading: 0, bottom: 0, trailing: 0))
                     Picker("pick an option", selection: $selection){
-                        Text("Sign Up").tag(0)
-                        Text("Log In").tag(1)
+                        Text("Log In").tag(0)
+                        Text("Sign Up").tag(1)
+                        
                     }
                     .pickerStyle(.segmented)
                     .padding(.horizontal)
