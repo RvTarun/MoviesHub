@@ -5,8 +5,12 @@
 //  Created by iMac02 on 12/02/26.
 //
 import SwiftUI
+import FirebaseCore
+import FirebaseAuth
+import FirebaseFirestore
 struct ProfileView: View {
     @ObservedObject var auth = AuthViewModel()
+    
     var body: some View {
         NavigationStack{
             VStack{
@@ -25,6 +29,7 @@ struct ProfileView: View {
 
 struct ProfileContent: View {
     @ObservedObject var auth = AuthViewModel()
+    @State private var userName: String = "Guest"
     var count = [
         GridItem(.flexible(minimum: 50, maximum: 250))
     ]
@@ -38,9 +43,9 @@ struct ProfileContent: View {
                             .frame(width: 70, height: 70)
                             .padding(5)
                         VStack(alignment: .leading){
-                            Text("\(userName[0])")
+                            Text("\(userName)")
                                 .font(.system(size: 22, weight: .bold, design: .default))
-                            Text("\(userName[0])@stream.com")
+                            Text("\(userName)@gmail.com")
                                 .font(.system(size: 14, weight: .regular))
                                 .opacity(0.8)
                         }
@@ -199,6 +204,7 @@ struct ProfileContent: View {
           
         }
     }
+    
 }
 
 

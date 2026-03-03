@@ -7,11 +7,13 @@
 import SwiftUI
 import FirebaseCore
 import FirebaseAuth
+import FirebaseFirestore
 struct interFace: View {
+    @State private var userName: String = "Guest"
     var body: some View {
         NavigationStack{
             HStack {
-                Text("Hello")
+                Text("Hello, \(userName)")
                     .font(.system(size: 22))
                 Spacer()
                 Image(systemName: "airplay.video")
@@ -28,7 +30,28 @@ struct interFace: View {
             .frame(height: 50)
             Divider()
         }
+        .onAppear {
+            fetchUserName()
+        }
     }
+    func fetchUserName() {
+            guard let uid = Auth.auth().currentUser?.uid else {
+                print("User not logged in")
+                return
+            }
+            
+            let db = Firestore.firestore()
+            
+            db.collection("users").document(uid).getDocument { document, error in
+                if let document = document, document.exists {
+                    if let name = document.get("name") as? String {
+                        self.userName = name
+                    }
+                } else {
+                    print("Document not found")
+                }
+            }
+        }
 }
 
 #Preview {
