@@ -5,11 +5,13 @@
 //  Created by iMac02 on 10/02/26.
 //
 import SwiftUI
+import FirebaseCore
+import FirebaseAuth
 struct interFace: View {
     var body: some View {
         NavigationStack{
             HStack {
-                Text("Hii \(userName[0])")
+                Text("Hello")
                     .font(.system(size: 22))
                 Spacer()
                 Image(systemName: "airplay.video")
