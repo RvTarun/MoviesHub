@@ -150,7 +150,7 @@ struct ProfileContent: View {
                     NavigationLink{
                        BookmarkView()
                     } label: {
-                        Text("\(Image(systemName: "bookmark.fill")) Manage Watchlist")
+                        Text("\(Image(systemName: "bookmark.fill")) favourites")
                             
                             .font(.headline)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -186,7 +186,7 @@ struct ProfileContent: View {
                             .background(Color.red.opacity(0.4))
                             .clipShape(RoundedRectangle(cornerRadius: 50))
                     }
-//-----------------------------------Bookmark Button------------------------------------------------\\
+//-----------------------------------Log out Button------------------------------------------------\\
 
                     Button(action: {
                         auth.logout()
