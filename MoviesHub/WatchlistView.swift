@@ -6,6 +6,28 @@
 //
 
 import SwiftUI
+import Combine
+
+// IMPORTANT: Inject .environmentObject(BookmarkStore()) from app entry point for bookmark management
+
+class BookmarkStore: ObservableObject {
+    
+    @Published var items: [CardModel] = []
+
+    func isBookmarked(_ card: CardModel) -> Bool {
+        items.contains(where: { $0.imgName == card.imgName && $0.category == card.category })
+    }
+
+    func toggle(_ card: CardModel) {
+        if let idx = items.firstIndex(where: { $0.imgName == card.imgName && $0.category == card.category }) {
+            items.remove(at: idx)
+        } else {
+            var saved = card
+            saved.isMarked = true
+            items.append(saved)
+        }
+    }
+}
 
 struct CardModel: Identifiable {
     var id = UUID()
@@ -18,6 +40,7 @@ struct CardModel: Identifiable {
 struct WatchList: View {
 //@State var isSaved: Bool = false
     @State private var card: [CardModel] = []
+    @EnvironmentObject var bookmarkStore: BookmarkStore
     
     
     init(){
@@ -62,8 +85,9 @@ struct WatchList: View {
                                    Spacer()
                                    Button{
                                        card[index].isMarked.toggle()
+                                       bookmarkStore.toggle(card[index])
                                    }label: {
-                                       Image(systemName:  card[index].isMarked ? "bookmark.fill": "bookmark")
+                                       Image(systemName:  (card[index].isMarked || bookmarkStore.isBookmarked(card[index])) ? "bookmark.fill": "bookmark")
                                            .foregroundStyle(Color.gray)
                                            .padding(10)
                                    }
@@ -97,7 +121,7 @@ struct WatchList: View {
 }
 
 #Preview {
-    WatchList()
+    WatchList().environmentObject(BookmarkStore())
 }
 
 struct TopView: View {
@@ -173,3 +197,61 @@ struct WatchlistbottomView: View {
     }
     
 }
+struct WatchlistBookmarksView: View {
+    @EnvironmentObject var bookmarkStore: BookmarkStore
+
+    var body: some View {
+        NavigationStack {
+            VStack {
+                if bookmarkStore.items.isEmpty {
+                    Text("No bookmarks yet")
+                        .foregroundStyle(.gray)
+                        .padding()
+                } else {
+                    ScrollView {
+                        ForEach(bookmarkStore.items) { item in
+                            ZStack{
+                                Rectangle()
+                                    .foregroundStyle(Color.white.opacity(0.1))
+                                    .cornerRadius(10)
+                                HStack(alignment: .top){
+                                    NavigationLink{
+                                        movieIteam(currentMovie: "\(item.imgName)", currentCategory: "\(item.category)")
+                                    }label:{
+                                        Image("\(item.imgName)")
+                                            .resizable()
+                                            .frame(width:100, height: 150)
+                                            .cornerRadius(10)
+                                            .clipped()
+                                    }
+                                    VStack(alignment: .leading){
+                                        Text("\(item.imgName)")
+                                            .font(.system(size: 22, weight: .bold))
+                                            .foregroundColor(.white)
+                                        Text("\(item.category)")
+                                            .font(.system(size: 18))
+                                            .foregroundStyle(Color.gray)
+                                    }
+                                    .padding(10)
+                                    Spacer()
+                                    Button{
+                                        bookmarkStore.toggle(item)
+                                    }label: {
+                                        Image(systemName: "bookmark.fill")
+                                            .foregroundStyle(Color.gray)
+                                            .padding(10)
+                                    }
+                                }
+                                .cornerRadius(10)
+                            }
+                        }
+                    }
+                }
+            }
+            .padding()
+            .background(Color.black)
+            .toolbar(.hidden)
+        }
+    }
+}
+
