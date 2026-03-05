@@ -30,9 +30,23 @@ struct ProfileView: View {
 struct ProfileContent: View {
     @ObservedObject var auth = AuthViewModel()
     @State private var userName: String = "Guest"
+    @State private var userEmail: String = ""
     var count = [
         GridItem(.flexible(minimum: 50, maximum: 250))
     ]
+    
+    private func loadCurrentUser() {
+        if let user = Auth.auth().currentUser {
+            // Prefer displayName if available, otherwise fallback to email local part
+            let name = user.displayName?.trimmingCharacters(in: .whitespacesAndNewlines)
+            self.userName = (name?.isEmpty == false) ? name! : (user.email?.components(separatedBy: "@").first ?? "User")
+            self.userEmail = user.email ?? ""
+        } else {
+            self.userName = "Guest"
+            self.userEmail = ""
+        }
+    }
+    
     var body: some View {
         NavigationStack{
             ScrollView{
@@ -45,7 +59,7 @@ struct ProfileContent: View {
                         VStack(alignment: .leading){
                             Text("\(userName)")
                                 .font(.system(size: 22, weight: .bold, design: .default))
-                            Text("\(userName)@gmail.com")
+                            Text(userEmail.isEmpty ? " " : userEmail)
                                 .font(.system(size: 14, weight: .regular))
                                 .opacity(0.8)
                         }
@@ -201,7 +215,9 @@ struct ProfileContent: View {
                     
                 }
             }
-          
+            
+        }.onAppear{
+            loadCurrentUser()
         }
     }
     
