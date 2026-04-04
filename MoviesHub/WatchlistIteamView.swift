@@ -24,10 +24,27 @@ struct movieIteam: View {
                         Image("\(currentMovie)")
                             .resizable()
                             .frame(height: 400)
-                        Text("Title: \(currentMovie)")
-                            .foregroundStyle(Color.white)
-                            .bold()
-                            .font(.system(size: 22))
+                        HStack{
+                            Text("Title: \(currentMovie)")
+                                .foregroundStyle(Color.white)
+                                .bold()
+                                .font(.system(size: 22))
+                            Spacer()
+                            NavigationLink{
+                                Text("Play \(currentMovie)")
+                                    .foregroundStyle(.white)
+                            } label: {
+                                Image(systemName: "play.circle.fill")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .foregroundStyle(Color.red)
+                                    .padding()
+                            }
+                        }
+//                        Text("Title: \(currentMovie)")
+//                            .foregroundStyle(Color.white)
+//                            .bold()
+//                            .font(.system(size: 22))
                         Text("Category: \(currentCategory)")
                             .foregroundStyle(Color.white)
                             .font(.system(size: 18))
