@@ -7,22 +7,6 @@
 
 import SwiftUI
 
-//struct BookmarkView: View {
-//    var body: some View {
-//       ZStack{
-//            Color.black.edgesIgnoringSafeArea(.all)
-//           VStack{
-//               Text("Saved Movies / Web Series")
-//                   .font(.title)
-//                   .bold()
-//                   .foregroundColor(.white)
-//           }
-//            
-//        }
-//    }
-//    
-//}
-
 struct BookmarkView: View {
     @EnvironmentObject var bookmarkStore: BookmarkStore
 

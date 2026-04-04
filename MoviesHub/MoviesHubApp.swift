@@ -2,13 +2,16 @@ import SwiftUI
 import FirebaseCore
 
 @main
-@MainActor struct MoviesHubApp: App {
+struct MoviesHubApp: App {
+    @StateObject var bookmarkStore = BookmarkStore()
+
     init() {
         FirebaseApp.configure()
     }
     var body: some Scene {
         WindowGroup {
             AuthView(auth: AuthViewModel())
+                .environmentObject(bookmarkStore)
         }
     }
 }

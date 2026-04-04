@@ -208,6 +208,7 @@ struct AuthView: View {
 }
 #Preview() {
     AuthView(auth: AuthViewModel())
+        .environmentObject(BookmarkStore())
 }
 
 struct LogInView: View {

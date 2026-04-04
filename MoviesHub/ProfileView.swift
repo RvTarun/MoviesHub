@@ -124,7 +124,7 @@ struct ProfileContent: View {
                         // watchList
                         ScrollView(.horizontal, showsIndicators: false){
                             LazyHGrid(rows: count){
-                                ForEach(Array(MovieD).shuffled(), id: \.key){key, value in
+                                ForEach(MovieD.sorted(by: <), id: \.key){key, value in
                                     Image("\(key)")
                                         .resizable()
                                         .cornerRadius(10)
@@ -150,7 +150,7 @@ struct ProfileContent: View {
                     NavigationLink{
                        BookmarkView()
                     } label: {
-                        Text("\(Image(systemName: "bookmark.fill")) favourites")
+                        Text("\(Image(systemName: "bookmark.fill")) Favourites")
                             
                             .font(.headline)
                             .frame(maxWidth: .infinity, alignment: .leading)
