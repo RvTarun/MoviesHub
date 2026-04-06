@@ -157,6 +157,62 @@ final class AuthViewModel: ObservableObject {
             errorMessage = error.localizedDescription
         }
     }
+    
+    /// Change the current user's password by reauthenticating with the old password first
+    func changePassword(oldPassword: String, newPassword: String, confirmPassword: String) {
+        errorMessage = nil
+        isLoading = true
+
+        let trimmedOld = oldPassword.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedNew = newPassword.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedConfirm = confirmPassword.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !trimmedOld.isEmpty, !trimmedNew.isEmpty, !trimmedConfirm.isEmpty else {
+            self.errorMessage = "Please fill all fields."
+            self.isLoading = false
+            return
+        }
+
+        guard trimmedNew == trimmedConfirm else {
+            self.errorMessage = "New password and confirm password do not match."
+            self.isLoading = false
+            return
+        }
+
+        guard let user = auth.currentUser, let email = user.email else {
+            self.errorMessage = "No logged in user."
+            self.isLoading = false
+            return
+        }
+
+        let credential = EmailAuthProvider.credential(withEmail: email, password: trimmedOld)
+
+        // Reauthenticate with the old password
+        user.reauthenticate(with: credential) { [weak self] _, reauthError in
+            guard let self else { return }
+
+            if let reauthError = reauthError {
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.errorMessage = reauthError.localizedDescription
+                }
+                return
+            }
+
+            // Now update to the new password
+            user.updatePassword(to: trimmedNew) { [weak self] updateError in
+                guard let self else { return }
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    if let updateError = updateError {
+                        self.errorMessage = updateError.localizedDescription
+                    } else {
+                        self.errorMessage = nil
+                    }
+                }
+            }
+        }
+    }
 }
 
 struct AuthView: View {

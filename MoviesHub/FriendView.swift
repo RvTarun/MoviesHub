@@ -63,17 +63,11 @@ struct FriendView: View {
                                         friend: friend,
                                         isSelected: selectedFriend?.id == friend.id
                                     ) {
-                                        // Select / deselect
+                                        // Select / deselect — show MY favourites on tap
                                         if selectedFriend?.id == friend.id {
                                             selectedFriend = nil
-                                            friendManager.overlapMovies = []
                                         } else {
                                             selectedFriend = friend
-                                            let myMovies = bookmarkStore.items.map { $0.imgName }
-                                            friendManager.loadOverlap(
-                                                friendUID: friend.id,
-                                                myBookmarkNames: myMovies
-                                            )
                                         }
                                     } onDelete: {
                                         friendManager.removeFriend(friendUID: friend.id)
@@ -86,12 +80,11 @@ struct FriendView: View {
                             .padding(.horizontal)
                         }
 
-                        // ── Watch Together overlap ──────────────────────
+                        // ── Watch Together — meri saari Favourites dikhao ──
                         if let friend = selectedFriend {
                             WatchTogetherSection(
                                 friendName: friend.name,
-                                isLoading: friendManager.isLoadingOverlap,
-                                movies: friendManager.overlapMovies
+                                movies: bookmarkStore.items   // <-- meri BookmarkStore ki items
                             )
                             .padding(.top, 24)
                         }
@@ -303,73 +296,98 @@ private struct FriendRow: View {
 }
 
 // MARK: - Watch Together Section
+// Ab yeh section meri saari BookmarkStore ki movies dikhata hai
+// jab bhi koi friend select hota hai
 private struct WatchTogetherSection: View {
     let friendName: String
-    let isLoading: Bool
-    let movies: [String]
+    let movies: [CardModel]   // BookmarkStore.items — meri saari favourites
 
     private let count = [GridItem(.flexible(minimum: 50, maximum: 250))]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
+
+            // ── Header ──────────────────────────────────────────────
+            HStack(spacing: 8) {
                 Image(systemName: "popcorn.fill")
                     .foregroundColor(.red)
-                Text("Watch Together with \(friendName)")
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(.white)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Watch Together with \(friendName)")
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundColor(.white)
+                    Text("Your saved favourites")
+                        .font(.system(size: 12))
+                        .foregroundColor(.gray)
+                }
             }
             .padding(.horizontal)
 
-            if isLoading {
-                HStack { Spacer(); ProgressView().tint(.white); Spacer() }
-                    .padding()
-            } else if movies.isEmpty {
-                Text("No movies in common yet — bookmark more movies!")
-                    .font(.system(size: 14))
-                    .foregroundColor(.gray)
-                    .padding(.horizontal)
+            if movies.isEmpty {
+                // Koi favourite nahi hai abhi
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("No favourites yet!")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(.white)
+                    Text("Bookmark movies from the home screen — they'll appear here so you and \(friendName) can watch together.")
+                        .font(.system(size: 12))
+                        .foregroundColor(.gray)
+                }
+                .padding(.horizontal)
+
             } else {
-                Text("\(movies.count) movie\(movies.count == 1 ? "" : "s") you both saved")
+                // Movie count badge
+                Text("\(movies.count) movie\(movies.count == 1 ? "" : "s") in your favourites")
                     .font(.system(size: 13))
                     .foregroundColor(.gray)
                     .padding(.horizontal)
 
+                // Horizontal scrolling movie cards
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHGrid(rows: count, spacing: 12) {
-                        ForEach(movies, id: \.self) { movie in
+                        ForEach(movies) { item in
                             NavigationLink {
                                 movieIteam(
-                                    currentMovie: movie,
-                                    currentCategory: MovieD[movie] ?? "Unknown"
+                                    currentMovie: item.imgName,
+                                    currentCategory: item.category
                                 )
                             } label: {
                                 ZStack(alignment: .bottomLeading) {
-                                    Image(movie)
+                                    // Poster image
+                                    Image(item.imgName)
                                         .resizable()
                                         .aspectRatio(2/3, contentMode: .fill)
                                         .frame(width: 110, height: 165)
                                         .cornerRadius(10)
                                         .clipped()
 
-                                    // Gradient overlay for text legibility
+                                    // Dark gradient for readability
                                     LinearGradient(
-                                        colors: [.clear, .black.opacity(0.75)],
+                                        colors: [.clear, .black.opacity(0.8)],
                                         startPoint: .center,
                                         endPoint: .bottom
                                     )
                                     .cornerRadius(10)
 
-                                    Text(movie)
+                                    // Movie title at bottom
+                                    Text(item.imgName)
                                         .font(.system(size: 11, weight: .bold))
                                         .foregroundColor(.white)
                                         .padding(.horizontal, 6)
                                         .padding(.bottom, 6)
                                         .lineLimit(2)
                                         .multilineTextAlignment(.leading)
+
+                                    // Play icon top-right
+                                    Image(systemName: "play.circle.fill")
+                                        .font(.system(size: 22))
+                                        .foregroundColor(.white.opacity(0.85))
+                                        .padding(6)
+                                        .frame(maxWidth: .infinity,
+                                               maxHeight: .infinity,
+                                               alignment: .topTrailing)
                                 }
                                 .frame(width: 110, height: 165)
-                                .shadow(radius: 4)
+                                .shadow(color: .black.opacity(0.5), radius: 4)
                             }
                         }
                     }
@@ -380,8 +398,12 @@ private struct WatchTogetherSection: View {
             }
         }
         .padding(.vertical, 16)
-        .background(Color.white.opacity(0.04))
+        .background(Color.white.opacity(0.05))
         .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.red.opacity(0.3), lineWidth: 1)
+        )
         .padding(.horizontal)
     }
 }

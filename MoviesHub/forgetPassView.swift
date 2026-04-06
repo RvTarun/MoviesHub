@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import FirebaseAuth
 
 struct forgetPassView: View {
     @StateObject private var auth = AuthViewModel()
@@ -25,30 +26,47 @@ struct forgetPassView: View {
                        .frame(width: 300, height: 300)
                        .shadow(radius: 30)
                        .padding(EdgeInsets(top: 70, leading: 0, bottom: 0, trailing: 0))
-                   TextField("Enter Old Password", text: $oldpass)
+                   SecureField("Enter Old Password", text: $oldpass)
                        .textFieldStyle(RoundedBorderTextFieldStyle())
                        .textInputAutocapitalization(.never)
                        .shadow(radius: 10)
-                   TextField("Enter New Password", text: $newpass)
+                   SecureField("Enter New Password", text: $newpass)
                        .textFieldStyle(RoundedBorderTextFieldStyle())
                        .textInputAutocapitalization(.never)
                        .shadow(radius: 10)
-                   TextField("Confirm Password", text: $confirmpass)
+                   SecureField("Confirm Password", text: $confirmpass)
                        .textFieldStyle(RoundedBorderTextFieldStyle())
                        .textInputAutocapitalization(.never)
                        .shadow(radius: 10)
                    Spacer()
-                  NavigationLink(destination: AuthView(auth: auth)){
-                      Text("Submit")
-                          .frame(maxWidth: .infinity)
-                          .font(.system(size: 20))
-                          .bold()
-                          .foregroundColor(.white)
-                          .padding()
-                          .background(Color.black)
-                          .clipShape(RoundedRectangle(cornerRadius: 50))
-                       
-                   }
+                  Button(action: {
+                      auth.changePassword(oldPassword: oldpass, newPassword: newpass, confirmPassword: confirmpass)
+                  }) {
+                      if auth.isLoading {
+                          ProgressView()
+                              .tint(.white)
+                              .frame(maxWidth: .infinity)
+                              .padding()
+                      } else {
+                          Text("Submit")
+                              .frame(maxWidth: .infinity)
+                              .font(.system(size: 20))
+                              .bold()
+                              .foregroundColor(.white)
+                              .padding()
+                      }
+                  }
+                  .background(Color.black)
+                  .clipShape(RoundedRectangle(cornerRadius: 50))
+                  .disabled(auth.isLoading)
+                  
+                  if let error = auth.errorMessage {
+                      Text(error)
+                          .foregroundColor(.red)
+                  } else if !auth.isLoading && !oldpass.isEmpty && !newpass.isEmpty && !confirmpass.isEmpty {
+                      Text("Password updated successfully.")
+                          .foregroundColor(.green)
+                  }
                    Spacer()
                }
                .padding(.horizontal)
