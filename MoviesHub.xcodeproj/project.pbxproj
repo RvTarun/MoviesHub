@@ -48,18 +48,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		114B9F562F80D265009A96D2 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		117A58A82F3B30B200CC287C = {
 			isa = PBXGroup;
 			children = (
 				117A58B32F3B30B200CC287C /* MoviesHub */,
-				114B9F562F80D265009A96D2 /* Frameworks */,
 				117A58B22F3B30B200CC287C /* Products */,
 			);
 			sourceTree = "<group>";
