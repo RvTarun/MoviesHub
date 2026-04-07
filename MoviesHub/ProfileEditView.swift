@@ -67,18 +67,3 @@ struct ProfileEditView: View {
 #Preview {
     ProfileEditView()
 }
-////                            Text("\(userName[0])")
-////                                .font(.system(size: 30, weight: .bold, design: .default))
-////                                .padding(.leading)
-//                        }
-//                        HStack(alignment: .bottom, spacing: 20){
-//                            Text("User ID: ")
-//                                .font(.system(size: 20))
-////                            Text("\(userName[0])@stream.com")
-////                                .font(.system(size: 25, weight: .bold, design: .default))
-////                                .padding(.leading)
-//                        }
-//                        HStack(alignment: .bottom, spacing: 20){
-//                            Text("Mobile: ")
-//                                .font(.system(size: 20))
-                        

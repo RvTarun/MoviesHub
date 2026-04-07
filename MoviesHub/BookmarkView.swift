@@ -66,6 +66,7 @@ struct BookmarkView: View {
     }
 }
 #Preview {
-    BookmarkView().environmentObject(BookmarkStore())
+    BookmarkView()
+        .environmentObject(BookmarkStore())
 }
 
