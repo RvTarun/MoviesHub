@@ -159,11 +159,11 @@ final class AuthViewModel: ObservableObject {
     }
     
     /// Change the current user's password by reauthenticating with the old password first
-    func changePassword(oldPassword: String, newPassword: String, confirmPassword: String) {
+    func changePassword(email: String, newPassword: String, confirmPassword: String) {
         errorMessage = nil
         isLoading = true
 
-        let trimmedOld = oldPassword.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedOld = email.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedNew = newPassword.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedConfirm = confirmPassword.trimmingCharacters(in: .whitespacesAndNewlines)
 
