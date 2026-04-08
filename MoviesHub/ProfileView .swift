@@ -11,6 +11,7 @@ import FirebaseFirestore
 
 struct ProfileView: View {
     @ObservedObject var auth = AuthViewModel()
+    @EnvironmentObject var bookmarkStore: BookmarkStore
 
     var body: some View {
         NavigationStack {
@@ -33,9 +34,11 @@ struct ProfileView: View {
 struct ProfileContent: View {
     @ObservedObject var auth = AuthViewModel()
     @EnvironmentObject var bookmarkStore: BookmarkStore
-
+    @Environment(\.dismiss) private var dismiss
+    
     @State private var userName: String = "Guest"
     @State private var userEmail: String = ""
+    @State private var navigateToAuth = false
 
     var count = [GridItem(.flexible(minimum: 50, maximum: 150))]
 
@@ -48,6 +51,11 @@ struct ProfileContent: View {
             self.userName  = "Guest"
             self.userEmail = ""
         }
+    }
+    
+    private func performLogout() {
+        auth.logout()
+        navigateToAuth = true
     }
 
     var body: some View {
@@ -202,18 +210,14 @@ struct ProfileContent: View {
                     }
 
                     // ── Log Out ───────────────────────────────────────
-                    Button(action: { auth.logout() }) {
-                        NavigationLink {
-                            ContentView()
-                        } label: {
-                            Text("Log Out \(Image(systemName: "rectangle.portrait.and.arrow.right"))")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                                .foregroundColor(.white)
-                                .padding(10)
-                                .background(Color.red.opacity(0.4))
-                                .clipShape(RoundedRectangle(cornerRadius: 50))
-                        }
+                    Button(action: performLogout) {
+                        Text("Log Out \(Image(systemName: "rectangle.portrait.and.arrow.right"))")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .background(Color.red.opacity(0.4))
+                            .clipShape(RoundedRectangle(cornerRadius: 50))
                     }
                     .disabled(auth.isLoading)
 
@@ -231,6 +235,10 @@ struct ProfileContent: View {
             }
         }
         .onAppear { loadCurrentUser() }
+        .navigationDestination(isPresented: $navigateToAuth) {
+            AuthView(auth: auth)
+                .environmentObject(bookmarkStore)
+        }
     }
 }
 
